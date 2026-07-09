@@ -54,11 +54,12 @@
             text-align: center;
             z-index: 1;
             max-width: 600px;
+            width: 100%;
         }
 
         /* Animated Heading */
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             margin-bottom: 10px;
             text-shadow: 0 0 10px rgba(188, 19, 254, 0.6);
             animation: fadeInDown 1.5s ease-out;
@@ -71,20 +72,82 @@
             margin-bottom: 20px;
         }
 
-        /* Typewriter Text Container */
+        /* Typewriter Text Containers */
         .message-box {
-            min-height: 60px;
+            min-height: 50px;
             margin-top: 15px;
+            margin-bottom: 20px;
         }
 
         .typing-text {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             line-height: 1.6;
             color: #e0e0e0;
             border-right: 2px solid var(--neon-purple);
             white-space: normal;
             display: inline;
-            animation: blink 0.75s step-end infinite;
+        }
+
+        .blink {
+            animation: blinkCursor 0.75s step-end infinite;
+        }
+
+        /* Secret Button styling */
+        .secret-btn {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--neon-purple);
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            border-radius: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            margin: 20px auto 0 auto;
+            display: block;
+        }
+
+        .secret-btn.show {
+            opacity: 1;
+            visibility: visible;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .secret-btn:hover {
+            background: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Secret Area box */
+        .secret-container {
+            margin-top: 25px;
+            padding: 15px;
+            border-left: 2px dashed rgba(188, 19, 254, 0.5);
+            background: rgba(188, 19, 254, 0.03);
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            display: none;
+        }
+
+        .secret-title {
+            font-size: 0.9rem;
+            color: var(--neon-purple);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .secret-text {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #d1d1d1;
+            font-style: italic;
         }
 
         /* Footer Branding */
@@ -95,7 +158,7 @@
             letter-spacing: 2px;
             color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
-            animation: fadeIn 3s ease-in;
+            z-index: 1;
         }
 
         footer span {
@@ -103,7 +166,7 @@
             font-weight: bold;
         }
 
-        /* Animations */
+        /* Keyframe Animations */
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -120,7 +183,7 @@
             60% { transform: translateY(-7px); }
         }
 
-        @keyframes blink {
+        @keyframes blinkCursor {
             from, to { border-color: transparent }
             50% { border-color: var(--neon-purple); }
         }
@@ -133,32 +196,71 @@
         <div class="emoji">🎉🥳</div>
         
         <div class="message-box">
-            <span class="typing-text" id="typed-text"></span>
+            <span class="typing-text blink" id="main-text"></span>
+        </div>
+
+        <!-- Secret Box Trigger -->
+        <button class="secret-btn" id="secret-trigger" onclick="revealSecret()">Show Secret Message</button>
+
+        <!-- Hidden Container for the Easter Egg -->
+        <div class="secret-container" id="secret-box">
+            <div class="secret-title">✨ A Note from Me to You</div>
+            <span class="typing-text" id="secret-message"></span>
         </div>
     </div>
 
     <footer>A <span>TACTIC</span> prod.</footer>
 
     <script>
-        // The text that will automatically type out on screen
-        const textToType = "Happy bday Busoye! I love you and wish you many more amazing years to come...";
-        let index = 0;
-        const speed = 70; // Speed in milliseconds per character
+        // Main greeting configurations
+        const mainText = "Happy bday Busoye! I love you and wish you many more amazing years to come...";
+        let mainIdx = 0;
 
-        function typeWriter() {
-            if (index < textToType.length) {
-                document.getElementById("typed-text").innerHTML += textToType.charAt(index);
-                index++;
-                setTimeout(typeWriter, speed);
+        // Easter Egg configurations
+        const secretText = "I always admired you so much that I had a crush on you for months even till date and I was kinda glad we became friends, like I'm fr so happy but that doesn't matter, what matters is that today is your birthday my love ❤️";
+        let secretIdx = 0;
+
+        function typeMainMessage() {
+            if (mainIdx < mainText.length) {
+                document.getElementById("main-text").innerHTML += mainText.charAt(mainIdx);
+                mainIdx++;
+                setTimeout(typeMainMessage, 60);
             } else {
-                // Keep the cursor solid when done typing
-                document.getElementById("typed-text").style.borderRight = "2px solid var(--neon-purple)";
+                // Done writing main message. Stop blinking and fade in the secret button
+                document.getElementById("main-text").classList.remove('blink');
+                document.getElementById("main-text").style.borderRight = "none";
+                document.getElementById("secret-trigger").classList.add('show');
             }
         }
 
-        // Start typing effect after everything loads smoothly
+        function revealSecret() {
+            // Hide the trigger button smoothly
+            const btn = document.getElementById("secret-trigger");
+            btn.style.display = "none";
+            
+            // Show the secret display layout box
+            const secretBox = document.getElementById("secret-box");
+            secretBox.style.display = "block";
+            
+            // Start the secret message typewriter effect
+            document.getElementById("secret-message").classList.add('blink');
+            typeSecretMessage();
+        }
+
+        function typeSecretMessage() {
+            if (secretIdx < secretText.length) {
+                document.getElementById("secret-message").innerHTML += secretText.charAt(secretIdx);
+                secretIdx++;
+                setTimeout(typeSecretMessage, 50);
+            } else {
+                // Final layout adjustments once everything finishes typing
+                document.getElementById("secret-message").classList.remove('blink');
+            }
+        }
+
+        // Initialize the flow smoothly on load
         window.onload = function() {
-            setTimeout(typeWriter, 500);
+            setTimeout(typeMainMessage, 800);
         };
     </script>
 </body>
