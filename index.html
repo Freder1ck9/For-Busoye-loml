@@ -33,7 +33,7 @@
             justify-content: flex-start;
             align-items: center;
             position: relative;
-            padding: 40px 20px 140px 20px; /* Generous bottom padding for layout comfort */
+            padding: 40px 20px 140px 20px;
         }
 
         /* Matrix Rain Background */
@@ -104,7 +104,7 @@
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 15px;
             text-shadow: 0 0 10px rgba(188, 19, 254, 0.6);
         }
@@ -202,13 +202,48 @@
             font-weight: bold;
         }
 
+        /* Outro Trigger Button */
+        #outro-trigger {
+            display: none;
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--neon-purple);
+            padding: 12px 28px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
+            transition: all 0.3s ease;
+            margin: 25px auto 0 auto;
+        }
+
+        #outro-trigger:hover {
+            background: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Outro Final Message Display */
+        #outro-box {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border: 1px solid var(--matrix-green);
+            background: rgba(0, 255, 65, 0.03);
+            border-radius: 8px;
+            text-align: center;
+            animation: fadeIn 1.2s ease-in;
+        }
+
         /* Shifted Up, Highly Visible Glitch Footer */
         footer {
             margin-top: 40px;
             margin-bottom: 20px;
             font-size: 0.95rem;
             letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.7); /* Highly visible */
+            color: rgba(255, 255, 255, 0.7);
             z-index: 5;
             text-align: center;
             width: 100%;
@@ -277,6 +312,16 @@
             <div class="secret-title">// UNENCRYPTED PERSONAL LOG DATA</div>
             <span class="typing-text blink" id="secret-text"></span>
         </div>
+
+        <!-- Outro Action Trigger -->
+        <button id="outro-trigger" onclick="revealOutro()">View Outro</button>
+
+        <!-- Final Outro Frame -->
+        <div id="outro-box">
+            <p style="font-size: 1.2rem; color: var(--matrix-green); line-height: 1.6; font-weight: bold;">
+                I love you once again and happy birthday once again! ❤️✨
+            </p>
+        </div>
     </div>
 
     <footer>A <div class="glitch-text" id="brand-glitch"><span>TACTIC</span> prod...</div></footer>
@@ -326,7 +371,6 @@
             } else {
                 brandElement.innerHTML = "<span>TACTIC</span> prod...";
             }
-            // Brief visual stutter
             if (Math.random() > 0.85) {
                 brandElement.style.transform = "skewX(" + (Math.random() * 20 - 10) + "deg)";
                 setTimeout(() => { brandElement.style.transform = "none"; }, 80);
@@ -335,7 +379,7 @@
 
         // App Configuration & Logic
         const mainMessage = "Happy bday Busoye! I love you and wish you many more amazing years to come...";
-        const secretMessage = "Heyyy.Busoye Happy Birthday Baby girl, you're most precious and the most beautiful cus I obviously love you \n\nBut it way more than you think, see I always had a crush on you since I firstly saw you but that was on assembly as I came in long story cut short we locked eyes for like 4 secs and ever since then I never really actually felt the same. So yeah I always had a crush on you and still do cus of course you're so pretty and I was pretty glad fr when we became friends cus you're one of the most special and most different person I have ever met";
+        const secretMessage = "Heyyy.Busoye Happy Birthday Baby girl, you're most precious and the most beautiful cuz I obviously love you \n\nBut it way more than you think, see I always had a crush on you since I firstly saw you but that was on assembly as I came in long story cut short we locked eyes for like 4 secs and ever since then I never really actually felt the same. So yeah I always had a crush on you and still do cuz of course you're so pretty and I was pretty glad fr when we became friends cuz you're one of the most special and most different person I have ever met.\n\nI love you Busoye.";
         
         let mainIdx = 0;
         let secretIdx = 0;
@@ -386,7 +430,6 @@
         function typeSecretMessage() {
             if (secretIdx < secretMessage.length) {
                 let char = secretMessage.charAt(secretIdx);
-                // Convert double linebreaks properly if present
                 if (char === "\n") {
                     document.getElementById("secret-text").innerHTML += "<br>";
                 } else {
@@ -394,13 +437,22 @@
                 }
                 secretIdx++;
                 
-                // Force window auto-scroll down to match the dynamic text injection line-by-line
                 window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-                
                 setTimeout(typeSecretMessage, 45);
             } else {
                 document.getElementById("secret-text").classList.remove('blink');
+                // Show the "View Outro" action button smoothly
+                const outroBtn = document.getElementById('outro-trigger');
+                outroBtn.style.display = 'block';
+                outroBtn.style.animation = 'fadeIn 1s ease-in';
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }
+        }
+
+        function revealOutro() {
+            document.getElementById('outro-trigger').style.display = 'none';
+            document.getElementById('outro-box').style.display = 'block';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     </script>
 </body>
